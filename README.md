@@ -1,154 +1,108 @@
-📘 VisaTime AI – Milestone 1
-Data Collection & Preprocessing
-📌 Project Overview
+#VisaTime AI – Milestone 1
 
-VisaTime AI is an AI-powered system designed to estimate visa processing times using historical H-1B disclosure data.
+##Data Collection & Preprocessing
 
-Milestone 1 focuses on:
+###Project Overview
 
-Data cleaning
+         VisaTime AI is an AI-powered system designed to estimate visa processing times using historical H-1B disclosure data.
 
-Missing value handling
+###Milestone 1 focuses on:
 
-Feature engineering
-
-Outlier treatment
-
-Preparing a training-ready dataset
-
+              -Data cleaning
+              -Missing value handling
+              -Feature engineering
+              -Outlier treatment
+              -Preparing a training-ready dataset
 This stage transforms raw disclosure records into a structured dataset suitable for machine learning.
 
-📂 Dataset Description
+##Dataset Description
 
 Source: H-1B Disclosure Data (Public Government Dataset)
 Initial Size: 79,999 records × 11 columns
 After Preprocessing: 78,400 records × 8 columns
 
-Key Features Used
+###Key Features Used:
 
-application_date
+            -application_date
+            -decision_date
+            -visa_type
+            -occupation_category
+            -wage
+            -worksite_state
+            -processing_center (derived proxy)
+            -processing_days (target variable)
 
-decision_date
-
-visa_type
-
-occupation_category
-
-wage
-
-worksite_state
-
-processing_center (derived proxy)
-
-processing_days (target variable)
-
-🎯 Objective of Milestone 1
+##Objective of Milestone 1
 
 To create a clean, realistic, and model-ready dataset for predicting visa processing time.
 
-🔧 Preprocessing Steps Performed
-1️⃣ Date Standardization
+##Preprocessing Steps Performed
+###1️⃣ Date Standardization
 
-Converted application_date and decision_date into datetime format.
+-Converted application_date and decision_date into datetime format.
+-Removed invalid or corrupted date records.
 
-Removed invalid or corrupted date records.
+        Ensures correct time-based calculations.
 
-✔ Ensures correct time-based calculations.
+###2️⃣ Target Variable Creation
+        processing_days = decision_date - application_date
 
-2️⃣ Target Variable Creation
-processing_days = decision_date - application_date
+This represents the number of days taken for visa decision.
 
-✔ This represents the number of days taken for visa decision.
-
-3️⃣ Removal of Unrealistic Durations
+###3️⃣ Removal of Unrealistic Durations
 
 Kept records where:
+        -Processing days ≥ 1
+        -Processing days ≤ 240
 
-Processing days ≥ 1
+  Removes appeal cases and abnormal records.
 
-Processing days ≤ 240
+###4️⃣ Missing Value Handling
+      -Numerical:Wage values filled using median imputation
 
-✔ Removes appeal cases and abnormal records.
+      -Categorical:Missing vales replaced with "UNKNOWN"
 
-4️⃣ Missing Value Handling
-Numerical
+ Prevents unnecessary row deletion.
 
-Wage values filled using median imputation
-
-Categorical
-
-Missing values replaced with "UNKNOWN"
-
-✔ Prevents unnecessary row deletion.
-
-5️⃣ Outlier Treatment
+###5️⃣ Outlier Treatment
 
 Removed extreme wage values using 1st and 99th percentile filtering.
 
-✔ Improves regression stability.
+Improves regression stability.
 
-6️⃣ Feature Engineering
-Seasonal Features
-
-Extracted month
-
-Extracted day_of_week
-
+###6️⃣ Feature Engineering
+Seasonal Features:
+          -Extracted month
+          -Extracted day_of_week
 Processing Center Proxy
+          -Since real USCIS service center information is not available in disclosure data, a proxy was created using geographic state mapping.
 
-Since real USCIS service center information is not available in disclosure data, a proxy was created using geographic state mapping.
+Captures regional workload variation.
 
-✔ Captures regional workload variation.
-
-7️⃣ Encoding
+###7️⃣ Encoding
 
 Applied Label Encoding to categorical variables:
 
-visa_type
+                 -visa_type
+                 -occupation_category
+                 -worksite_state
+                 -processing_center
 
-occupation_category
+Converts text features into numeric format for ML models.
 
-worksite_state
-
-processing_center
-
-✔ Converts text features into numeric format for ML models.
-
-8️⃣ Normalization
+###8️⃣ Normalization
 
 Applied Standard Scaling to wage feature.
 
-✔ Prevents scale dominance in regression models.
+Prevents scale dominance in regression models.
 
-📊 Final Training Dataset
+##Final Training Dataset
 
-After preprocessing:
+   After preprocessing:
+               -Rows	78,400
+               -Columns	8
+               -Target Variable	processing_days
+               -Data Type	Fully numeric
 
-Metric	Value
-Rows	78,400
-Columns	8
-Target Variable	processing_days
-Data Type	Fully numeric
-
-Final dataset saved as:
-
-visa_training_ready.csv
-✅ Milestone 1 Outcome
-
-Cleaned and validated dataset
-
-Removed unrealistic records
-
-Handled missing values
-
-Engineered relevant features
-
-Created ML-ready training dataset
-
-The dataset is now ready for:
-
-Exploratory Data Analysis (Milestone 2)
-
-Regression modeling
-
-Performance evaluation
+   Final dataset saved as:
+                visa_training_ready.csv
