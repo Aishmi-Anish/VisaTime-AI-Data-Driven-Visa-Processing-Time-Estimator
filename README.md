@@ -1,108 +1,193 @@
-#VisaTime AI – Milestone 1
+#  VisaTime AI  
+## AI-Enabled Visa Processing Time Estimator  
 
-##Data Collection & Preprocessing
+# 📘 Milestone 1: Data Collection & Preprocessing
 
-###Project Overview
+##  Project Overview
 
-         VisaTime AI is an AI-powered system designed to estimate visa processing times using historical H-1B disclosure data.
+**VisaTime AI** is an AI-powered system designed to estimate visa processing times using historical H-1B disclosure data.
 
-###Milestone 1 focuses on:
+Milestone 1 focuses on transforming raw disclosure records into a structured, realistic, and machine learning–ready dataset.
 
-              -Data cleaning
-              -Missing value handling
-              -Feature engineering
-              -Outlier treatment
-              -Preparing a training-ready dataset
-This stage transforms raw disclosure records into a structured dataset suitable for machine learning.
+## Milestone 1 Objectives
 
-##Dataset Description
+- Clean raw dataset  
+- Handle missing values  
+- Engineer meaningful features  
+- Remove unrealistic and abnormal records  
+- Normalize and encode data  
+- Generate final training-ready dataset  
 
-Source: H-1B Disclosure Data (Public Government Dataset)
-Initial Size: 79,999 records × 11 columns
-After Preprocessing: 78,400 records × 8 columns
+#  Dataset Description
 
-###Key Features Used:
+- **Source:** H-1B Disclosure Data (Public Government Dataset)  
+- **Initial Dataset Size:** 79,999 rows × 11 columns  
+- **Final Dataset Size:** 78,400 rows × 8 columns  
 
-            -application_date
-            -decision_date
-            -visa_type
-            -occupation_category
-            -wage
-            -worksite_state
-            -processing_center (derived proxy)
-            -processing_days (target variable)
+##  Key Features Used
 
-##Objective of Milestone 1
+- `application_date`
+- `decision_date`
+- `visa_type`
+- `occupation_category`
+- `wage`
+- `worksite_state`
+- `processing_center` *(derived proxy)*
+- `processing_days` *(target variable)*
 
-To create a clean, realistic, and model-ready dataset for predicting visa processing time.
+# Preprocessing Pipeline
 
-##Preprocessing Steps Performed
-###1️⃣ Date Standardization
+## 1️⃣ Column Standardization
 
--Converted application_date and decision_date into datetime format.
--Removed invalid or corrupted date records.
+- Converted column names to lowercase  
+- Removed extra spaces  
+- Ensured naming consistency  
 
-        Ensures correct time-based calculations.
+ Prevents case-sensitive errors and improves readability.
 
-###2️⃣ Target Variable Creation
-        processing_days = decision_date - application_date
 
-This represents the number of days taken for visa decision.
+## 2️⃣ Date Standardization
 
-###3️⃣ Removal of Unrealistic Durations
+- Converted `application_date` and `decision_date` into datetime format  
+- Invalid or corrupted values were converted to null and removed  
 
-Kept records where:
-        -Processing days ≥ 1
-        -Processing days ≤ 240
+✔ Ensures accurate time-based calculations.
 
-  Removes appeal cases and abnormal records.
+## 3️⃣ Target Variable Creation
 
-###4️⃣ Missing Value Handling
-      -Numerical:Wage values filled using median imputation
+Processing time calculated as:
 
-      -Categorical:Missing vales replaced with "UNKNOWN"
+```python
+processing_days = decision_date - application_date
+```
 
- Prevents unnecessary row deletion.
+ This becomes the regression target variable.
 
-###5️⃣ Outlier Treatment
+## 4️⃣ Removal of Unrealistic Durations
 
-Removed extreme wage values using 1st and 99th percentile filtering.
+Records retained where:
 
-Improves regression stability.
+- Processing days ≥ 1  
+- Processing days ≤ 240  
 
-###6️⃣ Feature Engineering
-Seasonal Features:
-          -Extracted month
-          -Extracted day_of_week
-Processing Center Proxy
-          -Since real USCIS service center information is not available in disclosure data, a proxy was created using geographic state mapping.
+ Removes appeal cases and abnormal records.  
+ Ensures realistic adjudication window.
 
-Captures regional workload variation.
+## 5️⃣ Missing Value Handling
 
-###7️⃣ Encoding
+### Numerical Columns
+- `wage` filled using **median imputation**
+- Median is robust against outliers.
 
-Applied Label Encoding to categorical variables:
+### Categorical Columns
+Missing values replaced with `"UNKNOWN"` for:
 
-                 -visa_type
-                 -occupation_category
-                 -worksite_state
-                 -processing_center
+- `job_title`
+- `occupation_category`
+- `worksite_state`
+- `visa_type`
 
-Converts text features into numeric format for ML models.
+ Prevents unnecessary row deletion.  
+ Preserves dataset size.
 
-###8️⃣ Normalization
+## 6️⃣ Outlier Treatment (Wage)
 
-Applied Standard Scaling to wage feature.
+- Removed extreme wage values using 1st and 99th percentile filtering.
 
-Prevents scale dominance in regression models.
+ Improves regression stability.  
+ Reduces noise from abnormal salary entries.
 
-##Final Training Dataset
+## 7️⃣ Feature Engineering
 
-   After preprocessing:
-               -Rows	78,400
-               -Columns	8
-               -Target Variable	processing_days
-               -Data Type	Fully numeric
+### Seasonal Features
 
-   Final dataset saved as:
-                visa_training_ready.csv
+Extracted:
+- `month`
+- `day_of_week`
+
+ Captures seasonal and workload patterns.
+
+### Processing Center Proxy
+
+Since real USCIS service center information is not available in disclosure data, a proxy was created using geographic state mapping.
+
+Example grouping:
+- WEST_CENTER
+- CENTRAL_CENTER
+- EAST_CENTER
+- SOUTH_CENTER
+
+ Captures regional processing variation.
+
+## 8️⃣ Encoding
+
+Applied **Label Encoding** to categorical variables:
+
+- `visa_type`
+- `occupation_category`
+- `worksite_state`
+- `processing_center`
+
+ Converts text features into numeric format for machine learning models.
+
+## 9️⃣ Normalization
+
+Applied **Standard Scaling** to the `wage` feature.
+
+ Prevents large numerical values from dominating regression models.  
+ Improves performance for linear models.
+
+
+## 🔟 Feature Selection
+
+Final selected features for training:
+
+- `visa_type`
+- `occupation_category`
+- `wage_scaled`
+- `worksite_state`
+- `processing_center`
+- `month`
+- `day_of_week`
+- `processing_days` (Target)
+
+ Removed redundant or non-predictive columns.  
+ Reduced dimensionality from 11 to 8 columns.
+
+# Final Training Dataset
+
+| Metric | Value |
+|--------|--------|
+| Rows | 78,400 |
+| Columns | 8 |
+| Target Variable | processing_days |
+| Data Type | Fully numeric |
+
+Final dataset saved as:
+
+```
+visa_training_ready.csv
+```
+
+# Milestone 1 Outcome
+
+- Cleaned and validated dataset  
+- Removed unrealistic and abnormal cases  
+- Handled missing values effectively  
+- Engineered seasonality and regional features  
+- Applied encoding and normalization  
+- Generated ML-ready dataset  
+
+The dataset is now ready for:
+
+- 📊 Exploratory Data Analysis (Milestone 2)  
+- 🤖 Regression Model Training  
+- 📈 Performance Evaluation  
+
+
+# 🛠 Tech Stack Used
+
+- Python  
+- Pandas  
+- NumPy  
+- Scikit-learn  
