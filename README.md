@@ -1,7 +1,7 @@
 #  VisaTime AI  
 ## AI-Enabled Visa Processing Time Estimator  
 
-# 📘 Milestone 1: Data Collection & Preprocessing
+# Milestone 1: Data Collection & Preprocessing
 
 ##  Project Overview
 
@@ -51,7 +51,7 @@ Milestone 1 focuses on transforming raw disclosure records into a structured, re
 - Converted `application_date` and `decision_date` into datetime format  
 - Invalid or corrupted values were converted to null and removed  
 
-✔ Ensures accurate time-based calculations.
+ Ensures accurate time-based calculations.
 
 ## 3️⃣ Target Variable Creation
 
@@ -180,19 +180,19 @@ visa_training_ready.csv
 
 The dataset is now ready for:
 
-- 📊 Exploratory Data Analysis (Milestone 2)  
-- 🤖 Regression Model Training  
-- 📈 Performance Evaluation  
+-  Exploratory Data Analysis (Milestone 2)  
+-  Regression Model Training  
+-  Performance Evaluation  
 
 
-# 🛠 Tech Stack Used
+# Tech Stack Used
 
 - Python  
 - Pandas  
 - NumPy  
 - Scikit-learn
 
-# 📘 Milestone 2: Exploratory Data Analysis (EDA)
+#  Milestone 2: Exploratory Data Analysis (EDA)
 
 ##  Overview
 
@@ -298,7 +298,7 @@ A correlation heatmap revealed:
 ### Key Insight
 Processing duration depends on **nonlinear interactions between multiple features** rather than isolated variables.
 
-# 🧠 Key Findings
+#  Key Findings
 
 - Processing time is strongly right-skewed.
 - Most applications are processed rapidly.
@@ -306,7 +306,7 @@ Processing duration depends on **nonlinear interactions between multiple feature
 - Individual features show weak linear relationships.
 - Complex interactions drive prediction behavior.
 
-# 🤖 Implications for Modeling
+#  Implications for Modeling
 
 Based on EDA findings:
 
@@ -322,7 +322,7 @@ Based on EDA findings:
 - Gradient Boosting Regressor
 - Ensemble-based approaches
 
-# ✅ Milestone 2 Outcome
+# Milestone 2 Outcome
 
 - Comprehensive understanding of dataset behavior
 - Identification of temporal and regional trends
@@ -334,7 +334,7 @@ The project is now ready to proceed to:
 ➡ **Milestone 3 – Predictive Modeling**
 
 
-## 🛠 Tools Used
+## Tools Used
 
 - Python
 - Pandas
