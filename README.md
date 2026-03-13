@@ -341,3 +341,131 @@ The project is now ready to proceed to:
 - Matplotlib
 - Seaborn
 
+# Milestone 3 – Model Development, Evaluation & Fine-Tuning
+
+## Overview
+
+In this milestone, multiple regression models were trained to predict **visa processing time (in days)** using the preprocessed dataset generated in Milestone 1 and analyzed in Milestone 2. The goal was to evaluate different machine learning models and identify the most suitable model for estimating processing duration.
+
+The following models were implemented and compared:
+
+- Linear Regression (Baseline Model)
+- Random Forest Regressor
+- XGBoost Regressor
+- Fine-Tuned XGBoost Regressor (using GridSearchCV)
+
+Model performance was evaluated using the following metrics:
+
+- **Mean Absolute Error (MAE)**
+- **Root Mean Squared Error (RMSE)**
+- **Coefficient of Determination (R² Score)**
+
+# Dataset Used
+
+**Input Dataset:** `visa_training_ready.csv`
+
+| Property | Value |
+|--------|------|
+| Total Records | 78,400 |
+| Features | Visa attributes, location, wage, temporal features |
+| Target Variable | `processing_days` |
+
+### Features Used
+
+- visa_type  
+- occupation_category  
+- worksite_state  
+- processing_center  
+- wage_scaled  
+- month  
+- day_of_week  
+
+### Target Variable
+ - processing_days:represents the number of days taken for visa application processing.
+
+# Models Implemented
+
+## Linear Regression
+
+Linear Regression was used as a baseline model to understand whether a simple linear relationship exists between the features and the target variable.
+
+However, the dataset exhibited weak linear correlations and a highly skewed distribution, which limited the performance of this model.
+
+
+## Random Forest Regressor
+
+Random Forest is an ensemble learning method that builds multiple decision trees and aggregates their predictions.
+
+Advantages:
+- Handles nonlinear relationships
+- Robust to outliers
+- Works well with high-dimensional tabular data
+
+Random Forest improved prediction performance compared to Linear Regression.
+
+## XGBoost Regressor
+
+XGBoost (Extreme Gradient Boosting) is a powerful ensemble algorithm based on gradient boosting.
+
+Advantages:
+- Captures complex nonlinear relationships
+- Handles feature interactions effectively
+- Provides strong performance on structured datasets
+
+XGBoost achieved the best performance among the initial models.
+
+
+
+# Hyperparameter Fine-Tuning
+
+To further improve the model performance, **GridSearchCV** was used to optimize XGBoost hyperparameters.
+
+### Parameters Tuned
+
+- Number of estimators (`n_estimators`)
+- Tree depth (`max_depth`)
+- Learning rate (`learning_rate`)
+- Subsample ratio (`subsample`)
+- Feature sampling (`colsample_bytree`)
+
+Cross-validation was used to evaluate parameter combinations and identify the best configuration.
+
+# Model Performance Comparison
+
+| Model | MAE | RMSE | R² Score |
+|------|------|------|------|
+| Linear Regression | ~7.62 | ~23.43 | ~0.0006 |
+| Random Forest | ~7.55 | ~23.27 | ~0.013 |
+| XGBoost (Baseline) | 7.5978 | 23.12 | 0.0268 |
+| **XGBoost (Fine-Tuned)** | **7.4493** | **23.03** | **0.0339** |
+
+
+# Best Model Selection
+
+The **Fine-Tuned XGBoost Regressor** was selected as the final model because it achieved:
+
+- Lowest **MAE**
+- Lowest **RMSE**
+- Highest **R² score**
+
+Although the dataset exhibited weak feature correlations and a highly skewed distribution, XGBoost demonstrated better ability to capture nonlinear relationships among visa attributes.
+
+# Key Observations
+
+- The dataset shows a strong dominance of applications processed within a few days.
+- Processing delays are influenced by complex operational factors not fully captured by available features.
+- Tree-based ensemble models outperform linear models for this type of structured data.
+
+# Outcome of Milestone 3
+
+By the end of this milestone:
+
+✔ Multiple regression models were trained  
+✔ Model performance was evaluated using MAE, RMSE, and R²  
+✔ Hyperparameter tuning was applied using GridSearchCV  
+✔ The **Fine-Tuned XGBoost model** was selected as the final predictive model  
+
+# Next Step
+
+The selected model will be integrated into a **user-facing application interface** in **Milestone 4**, enabling users to input visa attributes and receive estimated processing time predictions.
+
