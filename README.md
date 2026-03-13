@@ -381,7 +381,7 @@ Model performance was evaluated using the following metrics:
 - day_of_week  
 
 ### Target Variable
- - processing_days:represents the number of days taken for visa application processing.
+- processing_days: Represents the number of days taken for visa application processing.
 
 # Models Implemented
 
