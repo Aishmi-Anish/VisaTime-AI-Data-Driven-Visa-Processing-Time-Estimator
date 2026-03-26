@@ -25,9 +25,6 @@ st.set_page_config(
 st.markdown(f"""
 <style>
 
-/* =========================
-   BACKGROUND
-========================= */
 .stApp {{
     background-image: url("data:image/jpg;base64,{img}");
     background-size: cover;
@@ -42,9 +39,6 @@ st.markdown(f"""
     z-index: -1;
 }}
 
-/* =========================
-   SIDEBAR
-========================= */
 section[data-testid="stSidebar"] {{
     background-color: #000 !important;
 }}
@@ -53,9 +47,6 @@ section[data-testid="stSidebar"] * {{
     color: white !important;
 }}
 
-/* =========================
-   MAIN TEXT
-========================= */
 .block-container h1,
 .block-container h2,
 .block-container h3,
@@ -64,18 +55,12 @@ section[data-testid="stSidebar"] * {{
     color: white !important;
 }}
 
-/* =========================
-   INPUTS
-========================= */
 input, textarea {{
     color: white !important;
     background-color: rgba(0,0,0,0.6) !important;
     border: 1px solid white !important;
 }}
 
-/* =========================
-   SELECT BOX
-========================= */
 div[data-baseweb="select"] > div {{
     background-color: black !important;
     color: white !important;
@@ -97,9 +82,7 @@ ul[role="listbox"] li:hover {{
     background-color: #333 !important;
 }}
 
-/* =========================
-   BUTTONS
-========================= */
+
 button {{
     background-color: black !important;
     color: white !important;
@@ -111,9 +94,6 @@ button:hover {{
     color: white !important;
 }}
 
-/* =========================
-   METRIC + SLIDER
-========================= */
 [data-testid="stMetricValue"] {{
     color: white !important;
 }}
@@ -122,9 +102,6 @@ button:hover {{
     color: white !important;
 }}
 
-/* =========================
-   TITLE POSITION FIX
-========================= */
 .title-container {{
     margin-top: -40px;   /* move UP */
     margin-left: -50px;  /* move LEFT */
