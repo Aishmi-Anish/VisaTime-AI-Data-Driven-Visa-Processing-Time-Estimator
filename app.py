@@ -12,7 +12,7 @@ def get_base64(file):
         return base64.b64encode(f.read()).decode()
 
 
-img = get_base64("bg.jpg")   
+img = get_base64("Bg.jpg")   
 
 
 
