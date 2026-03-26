@@ -1,471 +1,203 @@
-#  VisaTime AI  
-## AI-Enabled Visa Processing Time Estimator  
+# 🛂 VisaTime AI  
+### AI-Enabled Visa Processing Time Estimator
 
-# Milestone 1: Data Collection & Preprocessing
+VisaTime AI is an end-to-end machine learning system designed to estimate visa processing time using historical H-1B disclosure data. The project combines data preprocessing, exploratory analysis, predictive modeling, and an interactive Streamlit-based user interface.
 
-##  Project Overview
+---
 
-**VisaTime AI** is an AI-powered system designed to estimate visa processing times using historical H-1B disclosure data.
+# 📌 Project Overview
 
-Milestone 1 focuses on transforming raw disclosure records into a structured, realistic, and machine learning–ready dataset.
+Visa processing systems handle large volumes of applications, leading to delays and uncertainty. This project leverages machine learning to:
 
-## Milestone 1 Objectives
+- Predict visa processing duration  
+- Provide data-driven insights  
+- Improve transparency for applicants  
 
-- Clean raw dataset  
-- Handle missing values  
-- Engineer meaningful features  
-- Remove unrealistic and abnormal records  
-- Normalize and encode data  
-- Generate final training-ready dataset  
+The system is built as a **complete AI pipeline**, from raw data to a deployed interactive interface.
 
-#  Dataset Description
+---
 
-- **Source:** H-1B Disclosure Data (Public Government Dataset)  
-- **Initial Dataset Size:** 79,999 rows × 11 columns  
-- **Final Dataset Size:** 78,400 rows × 8 columns  
+# 🧱 Project Architecture
+Raw Dataset → Preprocessing → EDA → Model Training → UI → Prediction
 
-##  Key Features Used
+---
 
-- `application_date`
-- `decision_date`
-- `visa_type`
-- `occupation_category`
-- `wage`
-- `worksite_state`
-- `processing_center` *(derived proxy)*
-- `processing_days` *(target variable)*
-
-# Preprocessing Pipeline
-
-## 1️⃣ Column Standardization
-
-- Converted column names to lowercase  
-- Removed extra spaces  
-- Ensured naming consistency  
-
- Prevents case-sensitive errors and improves readability.
-
-
-## 2️⃣ Date Standardization
-
-- Converted `application_date` and `decision_date` into datetime format  
-- Invalid or corrupted values were converted to null and removed  
-
- Ensures accurate time-based calculations.
-
-## 3️⃣ Target Variable Creation
-
-Processing time calculated as:
-
-```python
-processing_days = decision_date - application_date
-```
-
- This becomes the regression target variable.
-
-## 4️⃣ Removal of Unrealistic Durations
-
-Records retained where:
-
-- Processing days ≥ 1  
-- Processing days ≤ 240  
-
- Removes appeal cases and abnormal records.  
- Ensures realistic adjudication window.
-
-## 5️⃣ Missing Value Handling
-
-### Numerical Columns
-- `wage` filled using **median imputation**
-- Median is robust against outliers.
-
-### Categorical Columns
-Missing values replaced with `"UNKNOWN"` for:
-
-- `job_title`
-- `occupation_category`
-- `worksite_state`
-- `visa_type`
-
- Prevents unnecessary row deletion.  
- Preserves dataset size.
-
-## 6️⃣ Outlier Treatment (Wage)
-
-- Removed extreme wage values using 1st and 99th percentile filtering.
-
- Improves regression stability.  
- Reduces noise from abnormal salary entries.
-
-## 7️⃣ Feature Engineering
-
-### Seasonal Features
-
-Extracted:
-- `month`
-- `day_of_week`
-
- Captures seasonal and workload patterns.
-
-### Processing Center Proxy
-
-Since real USCIS service center information is not available in disclosure data, a proxy was created using geographic state mapping.
-
-Example grouping:
-- WEST_CENTER
-- CENTRAL_CENTER
-- EAST_CENTER
-- SOUTH_CENTER
-
- Captures regional processing variation.
-
-## 8️⃣ Encoding
-
-Applied **Label Encoding** to categorical variables:
-
-- `visa_type`
-- `occupation_category`
-- `worksite_state`
-- `processing_center`
-
- Converts text features into numeric format for machine learning models.
-
-## 9️⃣ Normalization
-
-Applied **Standard Scaling** to the `wage` feature.
-
- Prevents large numerical values from dominating regression models.  
- Improves performance for linear models.
-
-
-## 🔟 Feature Selection
-
-Final selected features for training:
-
-- `visa_type`
-- `occupation_category`
-- `wage_scaled`
-- `worksite_state`
-- `processing_center`
-- `month`
-- `day_of_week`
-- `processing_days` (Target)
-
- Removed redundant or non-predictive columns.  
- Reduced dimensionality from 11 to 8 columns.
-
-# Final Training Dataset
-
-| Metric | Value |
-|--------|--------|
-| Rows | 78,400 |
-| Columns | 8 |
-| Target Variable | processing_days |
-| Data Type | Fully numeric |
-
-Final dataset saved as:
-
-```
-visa_training_ready.csv
-```
-
-# Milestone 1 Outcome
-
-- Cleaned and validated dataset  
-- Removed unrealistic and abnormal cases  
-- Handled missing values effectively  
-- Engineered seasonality and regional features  
-- Applied encoding and normalization  
-- Generated ML-ready dataset  
-
-The dataset is now ready for:
-
--  Exploratory Data Analysis (Milestone 2)  
--  Regression Model Training  
--  Performance Evaluation  
-
-
-# Tech Stack Used
+# ⚙️ Tech Stack
 
 - Python  
-- Pandas  
-- NumPy  
-- Scikit-learn
+- Pandas, NumPy  
+- Scikit-learn  
+- XGBoost  
+- Matplotlib, Seaborn  
+- Streamlit  
 
-#  Milestone 2: Exploratory Data Analysis (EDA)
+---
 
-##  Overview
+# 📊 Dataset
 
-Milestone 2 focuses on performing **Exploratory Data Analysis (EDA)** on the preprocessed dataset generated in Milestone 1.  
-The objective of this phase is to understand data behavior, identify hidden patterns, analyze feature relationships, and derive insights that guide model selection and prediction strategy.
-
-EDA helps transform cleaned data into actionable knowledge before building machine learning models.
-
-##  Objectives of Milestone 2
-
-- Understand distribution of visa processing time
-- Identify trends and seasonal patterns
-- Analyze feature influence on processing duration
-- Detect correlations between variables
-- Validate preprocessing decisions
-- Support model selection using data-driven insights
-
-##  Dataset Used
-
-- **Input Dataset:** `visa_training_ready.csv`
-- **Records:** 78,400
-- **Features:** 8 (Fully numeric and ML-ready)
-
-### Features Analyzed
-
-- `visa_type`
-- `occupation_category`
-- `wage_scaled`
-- `worksite_state`
-- `processing_center`
-- `month`
-- `day_of_week`
-- `processing_days` (Target Variable)
-
-#  Exploratory Analysis Performed
-
-
-## 1️⃣ Processing Time Distribution
-
-### Observation
-- Distribution is highly **right-skewed**.
-- Majority of applications processed within **4–8 days**.
-- Small number of cases extend to longer durations.
-
-### Conclusion
-Visa adjudication is dominated by fast approvals, while complex cases create a long-tail delay pattern.
-
-## 2️⃣ State-wise Processing Analysis
-
-### Observation
-Average processing time varies slightly across states.
-
-### Conclusion
-Geographical location alone does not strongly influence processing speed, suggesting centralized or standardized processing workflows.
-
-## 3️⃣ Processing Center Analysis
-
-### Observation
-Processing distributions across centers are similar.
-
-### Conclusion
-Regional workload differences exist but are not dominant predictors individually.
-
-## 4️⃣ Visa Type Analysis
-
-### Observation
-Processing time distributions overlap across visa types.
-
-### Conclusion
-Visa category has limited standalone impact on processing duration.
-
-## 5️⃣ Wage vs Processing Time
-
-### Observation
-Scatter analysis shows no strong linear relationship.
-
-### Conclusion
-Higher wages do not directly result in faster processing decisions.
-
-## 6️⃣ Seasonal Trend Analysis
-
-### Observation
-Moderate variation observed across months.
-
-### Conclusion
-Visa processing exhibits mild seasonal workload patterns influenced by application cycles.
-
-## 7️⃣ Day-of-Week Analysis
-
-### Observation
-Processing times remain consistent across weekdays.
-
-### Conclusion
-Submission day has minimal operational effect due to batch processing systems.
-
-## 8️⃣ Correlation Analysis
-
-A correlation heatmap revealed:
-
-- Very weak linear correlations between individual features and processing time.
-- No single dominant predictor.
-
-### Key Insight
-Processing duration depends on **nonlinear interactions between multiple features** rather than isolated variables.
-
-#  Key Findings
-
-- Processing time is strongly right-skewed.
-- Most applications are processed rapidly.
-- Delayed cases form a small but important subset.
-- Individual features show weak linear relationships.
-- Complex interactions drive prediction behavior.
-
-#  Implications for Modeling
-
-Based on EDA findings:
-
-| Observation | Modeling Decision |
-|-------------|------------------|
-| Skewed target distribution | Avoid purely linear assumptions |
-| Weak correlations | Use nonlinear models |
-| Complex feature interactions | Apply ensemble learning |
-| Presence of rare delays | Robust regression required |
-
-### Recommended Models
-- Random Forest Regressor
-- Gradient Boosting Regressor
-- Ensemble-based approaches
-
-# Milestone 2 Outcome
-
-- Comprehensive understanding of dataset behavior
-- Identification of temporal and regional trends
-- Validation of preprocessing pipeline
-- Data-driven justification for model selection
-
-The project is now ready to proceed to:
-
-➡ **Milestone 3 – Predictive Modeling**
-
-
-## Tools Used
-
-- Python
-- Pandas
-- Matplotlib
-- Seaborn
-
-# Milestone 3 – Model Development, Evaluation & Fine-Tuning
-
-## Overview
-
-In this milestone, multiple regression models were trained to predict **visa processing time (in days)** using the preprocessed dataset generated in Milestone 1 and analyzed in Milestone 2. The goal was to evaluate different machine learning models and identify the most suitable model for estimating processing duration.
-
-The following models were implemented and compared:
-
-- Linear Regression (Baseline Model)
-- Random Forest Regressor
-- XGBoost Regressor
-- Fine-Tuned XGBoost Regressor (using GridSearchCV)
-
-Model performance was evaluated using the following metrics:
-
-- **Mean Absolute Error (MAE)**
-- **Root Mean Squared Error (RMSE)**
-- **Coefficient of Determination (R² Score)**
-
-# Dataset Used
-
-**Input Dataset:** `visa_training_ready.csv`
-
-| Property | Value |
-|--------|------|
-| Total Records | 78,400 |
-| Features | Visa attributes, location, wage, temporal features |
-| Target Variable | `processing_days` |
+- Source: H-1B Disclosure Data (Public Dataset)  
+- Initial Size: 79,999 × 11  
+- Final Size: 78,400 × 8  
 
 ### Features Used
 
 - visa_type  
 - occupation_category  
 - worksite_state  
-- processing_center  
+- processing_center (proxy)  
 - wage_scaled  
 - month  
 - day_of_week  
 
 ### Target Variable
-- processing_days: Represents the number of days taken for visa application processing.
 
-# Models Implemented
+- processing_days → Visa processing duration  
 
-## Linear Regression
+---
 
-Linear Regression was used as a baseline model to understand whether a simple linear relationship exists between the features and the target variable.
+# 🟢 Milestone 1 – Data Preprocessing
 
-However, the dataset exhibited weak linear correlations and a highly skewed distribution, which limited the performance of this model.
+### Key Steps
 
+- Column standardization  
+- Date conversion and validation  
+- Target variable creation  
+- Removal of unrealistic records (1–240 days)  
+- Missing value handling  
+- Outlier removal (wage filtering)  
+- Feature engineering (month, day_of_week)  
+- Processing center proxy creation  
+- Encoding and normalization  
 
-## Random Forest Regressor
+### Outcome
 
-Random Forest is an ensemble learning method that builds multiple decision trees and aggregates their predictions.
+- Clean, structured dataset  
+- Reduced noise and anomalies  
+- Training-ready dataset (`visa_training_ready.csv`)  
 
-Advantages:
-- Handles nonlinear relationships
-- Robust to outliers
-- Works well with high-dimensional tabular data
+---
 
-Random Forest improved prediction performance compared to Linear Regression.
+# 🟡 Milestone 2 – Exploratory Data Analysis
 
-## XGBoost Regressor
+### Key Insights
 
-XGBoost (Extreme Gradient Boosting) is a powerful ensemble algorithm based on gradient boosting.
+- Processing time is **right-skewed**  
+- Majority of applications processed within a few days  
+- No strong linear correlation between individual features  
+- Processing depends on **complex feature interactions**  
+- Seasonal patterns exist but are mild  
 
-Advantages:
-- Captures complex nonlinear relationships
-- Handles feature interactions effectively
-- Provides strong performance on structured datasets
+### Conclusion
 
-XGBoost achieved the best performance among the initial models.
+- Linear models are insufficient  
+- Nonlinear ensemble models are required  
 
+---
 
+# 🔵 Milestone 3 – Model Development
 
-# Hyperparameter Fine-Tuning
+### Models Implemented
 
-To further improve the model performance, **GridSearchCV** was used to optimize XGBoost hyperparameters.
+- Linear Regression  
+- Random Forest Regressor  
+- XGBoost Regressor  
+- Fine-Tuned XGBoost (GridSearchCV)  
 
-### Parameters Tuned
+### Evaluation Metrics
 
-- Number of estimators (`n_estimators`)
-- Tree depth (`max_depth`)
-- Learning rate (`learning_rate`)
-- Subsample ratio (`subsample`)
-- Feature sampling (`colsample_bytree`)
+- MAE (Mean Absolute Error)  
+- RMSE (Root Mean Squared Error)  
+- R² Score  
 
-Cross-validation was used to evaluate parameter combinations and identify the best configuration.
+### Best Model
 
-# Model Performance Comparison
+**Fine-Tuned XGBoost Regressor**
 
-| Model | MAE | RMSE | R² Score |
+| Model | MAE | RMSE | R² |
 |------|------|------|------|
 | Linear Regression | ~7.62 | ~23.43 | ~0.0006 |
 | Random Forest | ~7.55 | ~23.27 | ~0.013 |
-| XGBoost (Baseline) | 7.5978 | 23.12 | 0.0268 |
-| **XGBoost (Fine-Tuned)** | **7.4493** | **23.03** | **0.0339** |
+| XGBoost | ~7.59 | ~23.12 | ~0.026 |
+| **XGBoost (Tuned)** | **~7.45** | **~23.03** | **~0.033** |
 
+### Outcome
 
-# Best Model Selection
+- Nonlinear models outperform linear models  
+- XGBoost selected as final model  
 
-The **Fine-Tuned XGBoost Regressor** was selected as the final model because it achieved:
+---
 
-- Lowest **MAE**
-- Lowest **RMSE**
-- Highest **R² score**
+# 🟣 Milestone 4 – Streamlit UI & Prediction Engine
 
-Although the dataset exhibited weak feature correlations and a highly skewed distribution, XGBoost demonstrated better ability to capture nonlinear relationships among visa attributes.
+### Overview
 
-# Key Observations
+A user-friendly **Streamlit web application** was developed to interact with the trained model.
 
-- The dataset shows a strong dominance of applications processed within a few days.
-- Processing delays are influenced by complex operational factors not fully captured by available features.
-- Tree-based ensemble models outperform linear models for this type of structured data.
+### Features
 
-# Outcome of Milestone 3
+- Interactive input fields  
+- Real-time prediction engine  
+- Risk classification (Low / Moderate / High)  
+- AI-based analysis simulation (spinner)  
+- Dark-themed professional UI  
+- On-demand historical data visualization  
 
-By the end of this milestone:
+### User Workflow
+User Input → Data Encoding → Model Prediction → Output Display
 
-✔ Multiple regression models were trained  
-✔ Model performance was evaluated using MAE, RMSE, and R²  
-✔ Hyperparameter tuning was applied using GridSearchCV  
-✔ The **Fine-Tuned XGBoost model** was selected as the final predictive model  
+### Output
 
-# Next Step
+- Estimated processing time (in days)  
+- Risk level indicator  
+- Visual insights (optional toggle)  
 
-The selected model will be integrated into a **user-facing application interface** in **Milestone 4**, enabling users to input visa attributes and receive estimated processing time predictions.
+---
 
+# 📊 Visualizations
+
+- Processing Time Distribution (Histogram)  
+- Feature Importance (Model Explainability)  
+
+---
+
+# 🎯 Key Observations
+
+- Most visa applications are processed quickly  
+- Delays occur in a small subset of cases  
+- Processing depends on multiple interacting factors  
+- Model captures nonlinear relationships effectively  
+
+---
+
+# 🚀 Features of the System
+
+- End-to-end ML pipeline  
+- Data-driven predictions  
+- Interactive UI  
+- Explainable insights  
+- Scalable architecture  
+
+---
+
+# ⚠ Limitations
+
+- Dataset lacks real-time USCIS processing data  
+- External factors (policy changes, workload spikes) are not captured  
+- Moderate R² due to complexity of real-world systems  
+
+---
+
+# 🔮 Future Scope
+
+- Integration with real-time immigration APIs  
+- Explainable AI (SHAP) for per-user prediction insights  
+- Multi-country visa prediction system  
+- AI-based conversational visa assistant  
+
+---
+
+# ▶️ How to Run the Project
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
