@@ -231,10 +231,8 @@ if st.button("🔍 Predict Processing Time"):
 
         st.subheader("📊 Prediction Result")
 
-        st.metric(
-            label="Estimated Processing Time",
-            value=f"{prediction:.2f} days"
-        )
+        st.metric("Estimated Processing Time", f"{round(prediction)} days")
+        
 
         if prediction <= 7:
             st.success("Low Processing Delay Risk")
