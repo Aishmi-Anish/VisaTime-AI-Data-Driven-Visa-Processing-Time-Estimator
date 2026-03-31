@@ -1,3 +1,7 @@
+Deployed link:
+
+https://visatime-ai-data-driven-visa-processing-time-estimator-feptkuc.streamlit.app/
+
 # 🛂 VisaTime AI  
 ### AI-Enabled Visa Processing Time Estimator
 
