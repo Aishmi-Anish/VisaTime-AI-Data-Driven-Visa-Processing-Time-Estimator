@@ -1,3 +1,8 @@
+
+# Deployed link:
+
+https://visatime-ai-data-driven-visa-processing-time-estimator-feptkuc.streamlit.app/
+
 # 🛂 VisaTime AI  
 ### AI-Enabled Visa Processing Time Estimator
 
@@ -202,6 +207,3 @@ User Input → Data Encoding → Model Prediction → Output Display
 pip install -r requirements.txt
 streamlit run app.py
 
-# Deployed link:
-
-https://visatime-ai-data-driven-visa-processing-time-estimator-feptkuc.streamlit.app/
